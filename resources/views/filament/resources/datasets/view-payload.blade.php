@@ -109,10 +109,10 @@
                         {{ $dataset->file_format ?? 'EXCEL/CSV' }}
                     </span>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white mt-4 line-clamp-1" title="{{ $dataset->name ?? $dataset->title }}">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mt-4 break-words leading-snug line-clamp-2 md:line-clamp-3 hover:line-clamp-none transition-all cursor-default" title="{{ $dataset->name ?? $dataset->title }}">
                     {{ $dataset->name ?? $dataset->title }}
                 </h3>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1.5 line-clamp-2" title="{{ $dataset->description }}">
                     {{ $dataset->description ?: 'Platform dataset intelligence preview dan profil skema data tabular real-time.' }}
                 </p>
             </div>

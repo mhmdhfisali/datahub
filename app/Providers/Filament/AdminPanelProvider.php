@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\ApiTokenManager;
+use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Dashboard;
 use App\Filament\Pages\DataQualityProfiling;
 use App\Filament\Pages\ReportsExportCenter;
@@ -42,7 +43,8 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(fn () => view('filament.components.brand-logo'))
             ->brandLogoHeight('2rem')
             ->viteTheme('resources/css/filament/admin/theme.css')
-            ->login()
+            ->spa()
+            ->login(Login::class)
             ->profile(isSimple: false)
             ->userMenuItems([
                 'profile' => MenuItem::make()
@@ -63,6 +65,14 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 PanelsRenderHook::USER_MENU_BEFORE,
                 fn () => view('filament.hooks.theme-toggle')
+            )
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn () => view('filament.components.global-overlay-loader')
+            )
+            ->renderHook(
+                PanelsRenderHook::SIDEBAR_FOOTER,
+                fn () => view('filament.components.sidebar-footer-widget')
             )
             ->colors([
                 'primary' => Color::Indigo,

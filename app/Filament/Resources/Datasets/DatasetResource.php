@@ -33,6 +33,16 @@ class DatasetResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::withoutTrashed()->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'primary';
+    }
+
     public static function getGloballySearchableAttributes(): array
     {
         return ['title', 'category'];

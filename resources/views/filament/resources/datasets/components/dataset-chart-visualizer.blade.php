@@ -55,8 +55,23 @@
                 <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">PROPORSI PERSENTASE (DOUGHNUT)</h4>
                 <span class="text-xs text-indigo-500 font-mono">Top Categories</span>
             </div>
-            <div class="relative h-[280px] w-full flex items-center justify-center">
-                <canvas x-ref="doughnutCanvas"></canvas>
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 h-[280px]">
+                {{-- Canvas Doughnut Wrapper --}}
+                <div class="relative w-full sm:w-3/5 h-[200px] sm:h-full flex items-center justify-center">
+                    <canvas x-ref="doughnutCanvas"></canvas>
+                </div>
+                {{-- Scrollable Legend Wrapper (Mencegah teks/label terpotong) --}}
+                <div class="w-full sm:w-2/5 max-h-[120px] sm:max-h-[260px] overflow-y-auto pr-1.5 space-y-1.5 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700" x-ref="doughnutLegendContainer">
+                    <template x-for="(label, idx) in doughnutData.labels" :key="idx">
+                        <div class="flex items-center justify-between text-[11px] gap-2 py-1 px-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800/60 transition">
+                            <div class="flex items-center gap-1.5 min-w-0">
+                                <span class="w-2.5 h-2.5 rounded-full shrink-0" :style="'background-color: ' + (doughnutPalette[idx] || '#6366f1')"></span>
+                                <span class="text-gray-700 dark:text-gray-300 truncate" :title="label" x-text="label"></span>
+                            </div>
+                            <span class="font-mono font-semibold text-gray-500 dark:text-gray-400 shrink-0" x-text="doughnutData.counts[idx]"></span>
+                        </div>
+                    </template>
+                </div>
             </div>
         </div>
     </div>
@@ -72,6 +87,8 @@
                 selectedFeature: config.initialFeature || (config.categoricalColumns && config.categoricalColumns[0]) || '',
                 barChartInstance: null,
                 doughnutChartInstance: null,
+                doughnutData: { labels: [], counts: [] },
+                doughnutPalette: ['#6366f1', '#10b981', '#f59e0b', '#ec4899', '#06b6d4', '#8b5cf6', '#14b8a6', '#f97316', '#ef4444', '#84cc16', '#64748b'],
 
                 init() {
                     if (!this.selectedFeature && this.categoricalColumns.length > 0) {
@@ -131,11 +148,32 @@
                         counts[val] = (counts[val] || 0) + 1;
                     });
 
-                    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 15);
+                    // Urutkan berdasarkan frekuensi terbanyak
+                    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+
+                    // Batasi ke Top 10 kategori utama dan agregasikan sisanya ke 'Lainnya'
+                    let labels = [];
+                    let dataCounts = [];
+                    if (sorted.length > 10) {
+                        const top10 = sorted.slice(0, 10);
+                        const others = sorted.slice(10);
+                        const othersSum = others.reduce((sum, item) => sum + item[1], 0);
+
+                        labels = top10.map(e => e[0]);
+                        dataCounts = top10.map(e => e[1]);
+
+                        if (othersSum > 0) {
+                            labels.push('Lainnya');
+                            dataCounts.push(othersSum);
+                        }
+                    } else {
+                        labels = sorted.map(e => e[0]);
+                        dataCounts = sorted.map(e => e[1]);
+                    }
 
                     return {
-                        labels: sorted.map(e => e[0]),
-                        counts: sorted.map(e => e[1])
+                        labels: labels,
+                        counts: dataCounts
                     };
                 },
 
@@ -158,10 +196,12 @@
                     }
 
                     const dist = this.getFeatureData(this.selectedFeature);
+                    this.doughnutData = dist;
+
                     const isDark = document.documentElement.classList.contains('dark');
                     const textColor = isDark ? '#f3f4f6' : '#1f2937';
                     const gridColor = isDark ? 'rgba(156, 163, 175, 0.1)' : 'rgba(229, 231, 235, 0.8)';
-                    const palette = ['#6366f1', '#10b981', '#f59e0b', '#ec4899', '#06b6d4', '#8b5cf6', '#14b8a6', '#f97316', '#ef4444', '#84cc16'];
+                    const palette = this.doughnutPalette;
 
                     this.barChartInstance = new Chart(barCanvas, {
                         type: 'bar',
@@ -179,9 +219,24 @@
                             responsive: true,
                             maintainAspectRatio: false,
                             animation: false,
-                            plugins: { legend: { display: false } },
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    padding: 10,
+                                    cornerRadius: 8
+                                }
+                            },
                             scales: {
-                                x: { ticks: { color: textColor }, grid: { display: false } },
+                                x: {
+                                    ticks: {
+                                        color: textColor,
+                                        callback: function(val, index) {
+                                            const text = dist.labels[index] || '';
+                                            return text.length > 15 ? text.substring(0, 12) + '...' : text;
+                                        }
+                                    },
+                                    grid: { display: false }
+                                },
                                 y: { beginAtZero: true, ticks: { color: textColor, precision: 0 }, grid: { color: gridColor } }
                             }
                         }
@@ -203,9 +258,15 @@
                             maintainAspectRatio: false,
                             animation: false,
                             plugins: {
-                                legend: { position: 'right', labels: { color: textColor, font: { size: 11 } } }
+                                legend: {
+                                    display: false // Ditangani secara bersih dan responsif oleh custom scrollable legend container
+                                },
+                                tooltip: {
+                                    padding: 10,
+                                    cornerRadius: 8
+                                }
                             },
-                            cutout: '60%'
+                            cutout: '62%'
                         }
                     });
                 }

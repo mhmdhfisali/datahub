@@ -212,9 +212,13 @@
                             plugins: {
                                 legend: {
                                     display: ['doughnut', 'polarArea', 'radar'].includes(chartType),
+                                    position: 'bottom',
+                                    maxHeight: 100,
                                     labels: {
                                         color: textColor,
-                                        font: { size: 12 }
+                                        font: { size: 11 },
+                                        boxWidth: 12,
+                                        padding: 12,
                                     }
                                 },
                                 tooltip: {

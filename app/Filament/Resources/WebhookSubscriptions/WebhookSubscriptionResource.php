@@ -26,6 +26,16 @@ class WebhookSubscriptionResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    public static function getNavigationBadge(): ?string
+    {
+        return 'Active';
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
+
     public static function form(Schema $schema): Schema
     {
         return WebhookSubscriptionForm::configure($schema);

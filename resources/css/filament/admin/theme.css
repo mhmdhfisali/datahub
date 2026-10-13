@@ -4,3 +4,101 @@
 @source '../../../../resources/views/**/*';
 @source '../../../../vendor/filament/**/*.blade.php';
 
+/* Enterprise Sidebar Navigation Styling */
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    background-color: rgba(99, 102, 241, 0.12) !important;
+    color: rgb(129, 140, 248) !important;
+    border-right: 2px solid rgb(99, 102, 241) !important;
+    font-weight: 600 !important;
+}
+
+.dark .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    background-color: rgba(99, 102, 241, 0.15) !important;
+    color: rgb(165, 180, 252) !important;
+    border-right: 2px solid rgb(99, 102, 241) !important;
+}
+
+.fi-sidebar-group-label {
+    text-transform: uppercase !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em !important;
+    color: rgb(148, 163, 184) !important;
+}
+
+.dark .fi-sidebar-group-label {
+    color: rgb(100, 116, 139) !important;
+}
+
+/* Futuristic Split-Screen Login Page Styling */
+.login-split-card input[type="email"],
+.login-split-card input[type="password"],
+.login-split-card input[type="text"] {
+    background-color: #030712 !important; /* bg-gray-950 */
+    border-color: #1f2937 !important; /* border-gray-800 */
+    color: #ffffff !important;
+    border-radius: 0.75rem !important; /* rounded-xl */
+    padding: 0.75rem 1rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.login-split-card input[type="email"]::placeholder,
+.login-split-card input[type="password"]::placeholder {
+    color: #6b7280 !important; /* placeholder-gray-500 */
+}
+
+.login-split-card input[type="email"]:focus,
+.login-split-card input[type="password"]:focus,
+.login-split-card input[type="text"]:focus {
+    border-color: #6366f1 !important; /* focus:border-indigo-500 */
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important; /* ring-indigo-500/20 */
+    outline: none !important;
+}
+
+.login-split-card .fi-input-wrp {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Checkbox Remember Me */
+.login-split-card input[type="checkbox"] {
+    background-color: #030712 !important;
+    border-color: #374151 !important;
+    color: #6366f1 !important;
+    border-radius: 0.375rem !important;
+}
+
+.login-split-card input[type="checkbox"]:focus {
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3) !important;
+}
+
+.login-split-card .fi-fo-field-label-content {
+    color: #9ca3af !important; /* text-gray-400 */
+    font-size: 0.8125rem !important;
+}
+
+/* Tombol Sign In Gradasi Modern & Glow Shadow */
+.login-split-card button[type="submit"].fi-btn {
+    background-image: linear-gradient(to right, #4f46e5, #7c3aed) !important; /* from-indigo-600 to-purple-600 */
+    color: #ffffff !important;
+    border-radius: 0.75rem !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.025em !important;
+    border: none !important;
+    box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4), 0 8px 10px -6px rgba(79, 70, 229, 0.3) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.login-split-card button[type="submit"].fi-btn:hover {
+    background-image: linear-gradient(to right, #6366f1, #9333ea) !important; /* from-indigo-500 to-purple-500 */
+    box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.5), 0 10px 10px -5px rgba(99, 102, 241, 0.3) !important;
+    transform: translateY(-1px) !important;
+}
+
+.login-split-card button[type="submit"].fi-btn:active {
+    transform: translateY(0px) !important;
+}
+

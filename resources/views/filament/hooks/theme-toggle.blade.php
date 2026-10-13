@@ -19,7 +19,7 @@
         }
         window.dispatchEvent(new CustomEvent('theme-changed', { detail: this.isDark ? 'dark' : 'light' }));
     }
-}" class="flex items-center mr-2">
+}" class="flex items-center mr-2" data-theme-toggle>
     <button type="button" @click="toggle()"
             :title="isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
             class="relative inline-flex items-center justify-center p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-300 focus:outline-none">

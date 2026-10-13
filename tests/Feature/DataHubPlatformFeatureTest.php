@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\VisualQueryBuilder;
 use App\Filament\Resources\Datasets\DatasetResource;
 use App\Filament\Resources\Datasets\Pages\CreateDataset;
@@ -394,5 +395,37 @@ class DataHubPlatformFeatureTest extends TestCase
             ->set('activeTab', 'trash')
             ->assertSee('Deleted Dataset Item')
             ->assertDontSee('Active Dataset Alpha');
+    }
+
+    public function test_custom_login_page_renders_and_authenticates(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'admin@enterprise.io',
+            'password' => bcrypt('password123'),
+        ]);
+
+        $response = $this->get(route('filament.admin.auth.login'));
+        $response->assertStatus(200)
+            ->assertSee('Unified Enterprise')
+            ->assertSee('Data Intelligence')
+            ->assertSee('Masuk ke Akun Anda');
+
+        Livewire::test(Login::class)
+            ->fillForm([
+                'email' => 'admin@enterprise.io',
+                'password' => 'wrong-pass',
+            ])
+            ->call('authenticate')
+            ->assertHasFormErrors(['email']);
+
+        Livewire::test(Login::class)
+            ->fillForm([
+                'email' => 'admin@enterprise.io',
+                'password' => 'password123',
+            ])
+            ->call('authenticate')
+            ->assertHasNoFormErrors();
+
+        $this->assertAuthenticatedAs($user);
     }
 }
